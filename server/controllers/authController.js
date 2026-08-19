@@ -34,3 +34,36 @@ exports.register = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  // Check for user
+  const user = await User.findOne({ email }).select('+password');
+  
+  if (!user) {
+    return sendError(res, 401, 'Invalid credentials');
+  }
+
+  // Check if password matches
+  const isMatch = await user.matchPassword(password);
+  
+  if (!isMatch) {
+    return sendError(res, 401, 'Invalid credentials');
+  }
+
+  const token = user.generateToken();
+
+  sendSuccess(res, 200, {
+    token,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    }
+  });
+});
