@@ -44,11 +44,11 @@ app.get('/', (req, res) => {
 });
 
 // TODO: Mount routers here
-// app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 // app.use('/api/projects', require('./routes/projectRoutes'));
 // app.use('/api/tasks', require('./routes/taskRoutes'));
 
 // TODO: Mount global error handler here
-// app.use(require('./middleware/errorHandler'));
+app.use(require('./middleware/errorHandler'));
 
 module.exports = app;
